@@ -21,6 +21,7 @@ controller.create = async(req, res) => {
         if(! req.body.senha) return res.status(500).send({
             message: "Um campo 'senha' deve ser fornecido"
         })
+
         // Encripta a senha aber passada no campo "senha"
         // gerando o campo "hash_senha"
         req.body.hash_senha = await bcrypt.hash(req.body.senha, 12)
@@ -28,6 +29,17 @@ controller.create = async(req, res) => {
         // Apaga o campo "senha" para não disparar validação do
         // Sequilize
         delete req.body.senha
+
+        // Se o usuário logado não for admin, o valor do campo
+        // admin do usuário que está sendo criado não pode ser
+        // true
+        if(req.infoLogado) {
+            if(! req.infoLogado.admin) req.body.admin = false
+        }
+        // Se não tiver o campo infoLogado no req, significa que
+        // o acesso foi feito sem token. Nesse caso, também não
+        // podemos criar um usuário admin
+        else req.body.admin = false
 
         await Usuario.create(req.body)
         // HTTP 201: Created
@@ -42,7 +54,19 @@ controller.create = async(req, res) => {
 
 controller.retrieve = async (req, res) => {
     try {
-        const result = await Usuario.scope('semSenha').findAll()
+
+        // Se o usuário logado não for admin, o único registro
+        // retornado deve ser o dele mesmo
+        let result;
+        if(req.infoLogado.admin) {
+            result = await Usuario.scope('semSenha').findAll()
+        } 
+        else {
+            result = await Usuario.scope('semSenha').findAll({
+                where: { id: req.infoLogado.id }
+            })
+        }
+
         // HTTP 200: OK (implícito)
         res.send(result)
     }
@@ -55,7 +79,13 @@ controller.retrieve = async (req, res) => {
 
 controller.retrieveOne = async (req, res) => {
     try {
-        const result = await Usuario.findByPk(req.params.id)
+
+        // Usuário não-amins só podem ter acesso ao próprio registro
+        if(! (req.infoLogado.admin) && req.infoLogado.id != req.params.id) {
+            return res.send(403).end();
+        }
+
+        const result = await Usuario.scope('semSenha').findByPk(req.params.id)
         // HTTP 200: OK
         if (result) {
             res.send(result)
@@ -71,6 +101,12 @@ controller.retrieveOne = async (req, res) => {
 
 controller.update = async(req, res) => {
     try {
+
+        // Usuário não-amins só podem ter acesso ao próprio registro
+        if(! (req.infoLogado.admin) && req.infoLogado.id != req.params.id) {
+            return res.send(403).end();
+        }
+
         // Se o campo "senha" existir em req.body
         // precisamos gerar a versão criptografada
         // da nova senha
@@ -100,6 +136,12 @@ controller.update = async(req, res) => {
 
 controller.delete = async (req, res) => {
     try {
+
+        // Usuário não-amins só podem ter acesso ao próprio registro
+        if(! (req.infoLogado.admin) && req.infoLogado.id != req.params.id) {
+            return res.send(403).end();
+        }
+
         const response = await Usuario.destroy(
             { where: { id: req.params.id }} 
         )
