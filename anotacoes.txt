@@ -1,0 +1,12 @@
+Usuario: "gustavosilva.gs2001@hotmail.com"
+senha: "senhaTeste123"
+
+"email": "chris.sugawara2000@hotmail.com",
+  "data_nasc": "2005-04-28",
+  "senha": "chrisLoveElas"
+
+token 16/09: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibm9tZSI6Imd1c3Rhdm8iLCJlbWFpbCI6Imd1c3Rhdm9zaWx2YS5nczIwMDFAaG90bWFpbC5jb20iLCJhZG1pbiI6ZmFsc2UsImRhdGFfbmFzYyI6IjIwMDEtMDctMjZUMDA6MDA6MDAuMDAwWiIsImlhdCI6MTY2MzMzNjUxNywiZXhwIjoxNjYzMzY1MzE3fQ.udV5QS6_vVLytAB5NLCo4qGPQBl00rTKPSOnIfgx_aE
+
+Mudar o Token (fazer login) sempre antes de fazer os GET POST e etc, e colocar o token lá
+
+npx sequelize-cli model:generate --name Turma --attributes id:integer,curso_id:integer,professor_id:integer,nome:string,dia_semana:tinyint,horario_ini:time,horario_fim:time,data_ini:dateonly,data_fim:dateonly

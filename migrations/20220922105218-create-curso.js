@@ -9,27 +9,26 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       sigla: {
-        allowNull: false,
         type: Sequelize.CHAR(5),
         unique: true
       },
       descricao: {
-        allowNull: false,
-        type: Sequelize.STRING(50)
+        type: Sequelize.STRING(50),
+        allowNull: false
       },
       duracao_meses: {
-        allowNull: false,
         type: Sequelize.TINYINT,
+        allowNull: false,
         defaultValue: 6
       },
       carga_horaria: {
-        allowNull: false,
         type: Sequelize.TINYINT,
-        defaultValue:80
+        allowNull: false,
+        defaultValue: 80
       },
       valor_total: {
-        allowNull: false,
-        type: Sequelize.DECIMAL(18,2)
+        type: Sequelize.DECIMAL(18, 2),
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
@@ -42,6 +41,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('cursos');
+    await queryInterface.dropTable('Cursos');
   }
 };

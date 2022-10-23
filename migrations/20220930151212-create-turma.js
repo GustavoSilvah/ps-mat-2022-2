@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Turmas', {
+    await queryInterface.createTable('turmas', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -32,23 +32,23 @@ module.exports = {
       dia_semana: {
         type: Sequelize.TINYINT,
         allowNull: false,
-        min: 1, // Domingo
-        max: 7 // Sábado
+        min: 1,  // domingo
+        max: 7   // sábado
       },
       horario_ini: {
         type: Sequelize.TIME,
-        allowNull: false,
+        allowNull: false
       },
       horario_fim: {
         type: Sequelize.TIME,
-        allowNull: false,
+        allowNull: false
       },
       data_ini: {
         type: Sequelize.DATEONLY,
-        allowNull: false,
+        allowNull: false
       },
       data_fim: {
-        type: Sequelize.DATEONLY,
+        type: Sequelize.DATEONLY
       },
       createdAt: {
         allowNull: false,
@@ -61,6 +61,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Turmas');
+    await queryInterface.dropTable('turmas');
   }
 };
