@@ -195,7 +195,6 @@ controller.login = async (req, res) => {
             let senhaOk = await bcrypt.compare(req.body.senha, usuario.hash_senha)
 
             if(senhaOk) {
-                console.log({usuario})
                 // Gera e retorna o token
                 const token = jwt.sign(
                     {
@@ -212,10 +211,8 @@ controller.login = async (req, res) => {
                 //res.json({ auth: true, token })
 
                 // Token retornando em um cookie seguro (HTTP only)
-                res.cookie('app-data', token, {
-                    httpOnly: true,
-                    secure: true
-                }).status(200).json({auth: true})
+                res.setHeader('Set-Cookie', 
+                    `app-data=${token}; Domain=agoravai-gustavo.onrender.com; SameSite=None; Secure; Path=/; HttpOnly`).status(200).json({auth: true})
             }
             else {  // Senha inválida
                 // HTTP 401: Unauthorized
